@@ -21,15 +21,6 @@ def require_command(name):
     return command
 
 
-def run_backend_tests():
-    php = require_command("php")
-    subprocess.run(
-        [php, str(ROOT / "tests" / "backend" / "model_smoke.php")],
-        cwd=ROOT,
-        check=True,
-    )
-
-
 def wait_for_server(server):
     deadline = time.monotonic() + 15
     url = f"{BASE_URL}/index.html"
@@ -74,7 +65,6 @@ def run_frontend_tests():
 
 def main():
     try:
-        run_backend_tests()
         run_frontend_tests()
     except (OSError, RuntimeError, subprocess.CalledProcessError) as error:
         print(f"Falha na pipeline de testes: {error}", file=sys.stderr)

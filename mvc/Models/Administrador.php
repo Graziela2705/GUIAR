@@ -56,10 +56,7 @@ class Administrador
             $stmt->bindParam(':senha', $password, PDO::PARAM_STR);
             $stmt->execute();
 
-            if ($stmt->rowCount() > 0) {
-                return $stmt->fetch(PDO::FETCH_ASSOC);
-            }
-            return false;
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
         } catch (PDOException $e) {
             error_log("Erro no login do administrador: " . $e->getMessage());
             return false;

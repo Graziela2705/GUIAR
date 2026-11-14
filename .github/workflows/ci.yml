@@ -9,7 +9,27 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite
+          coverage: none
+
+      - name: Run backend model smoke tests
+        run: php tests/backend/model_smoke.php
+
+      - name: Run backend functional tests
+        run: php tests/backend/model_functional.php
+
+  frontend-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,5 +63,5 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Run backend and frontend tests
+      - name: Run frontend tests
         run: python scripts/ci.py

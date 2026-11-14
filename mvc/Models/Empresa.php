@@ -19,10 +19,7 @@ class Empresa {
             $stmt->bindParam(':senha', $password);
             $stmt->execute();
 
-            if ($stmt->rowCount() > 0) {
-                return $stmt->fetch(PDO::FETCH_ASSOC);
-            }
-            return false;
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
         } catch (PDOException $e) {
             error_log("Erro de login empresa: " . $e->getMessage());
             return false;
@@ -77,7 +74,7 @@ class Empresa {
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            return $stmt->rowCount() > 0;
+            return $stmt->fetchColumn() !== false;
         } catch (PDOException $e) {
             error_log("Erro ao verificar email: " . $e->getMessage());
             return false;
