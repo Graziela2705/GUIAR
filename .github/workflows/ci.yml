@@ -9,6 +9,39 @@ permissions:
   contents: read
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite
+          coverage: none
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Validate PHP dependencies
+        run: composer validate --no-check-publish
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Check PHP syntax
+        run: git ls-files -z -- '*.php' | xargs -0 -r -n1 php -l
+
   backend-tests:
     runs-on: ubuntu-latest
 
